@@ -12,7 +12,7 @@ $directorio = __DIR__;
 
 class guardardatos
 {
-
+    
 
     public function crear($titulocurso)
     {
@@ -61,8 +61,10 @@ class guardardatos
 
             for ($i = 0; $i < $numfilas; $i++) { //que repita la accion por cada fila
                 $datos = mysqli_fetch_array($validad); // que almacene los datos por cada fila 
-                $jsoncursos_disponibles = array('id_curso' => $datos['id_curso'], 'titulo' => $datos['titulo'], 'imagen' => $datos['imagen'], 'texto2' => $datos['texto_2'], 'texto3' => $datos['texto_3'], 'texto4' => $datos['texto_4'], 'pagina' => $datos['pagina']);
+                $jsoncursos_disponibles = array('id_curso' => $datos['id_curso'], 'titulo' => $datos['titulo'], 'imagen' => $datos['imagen'], 'texto2' => $datos['texto_2'], 'texto3' => $datos['texto_3'], 'texto4' => $datos['texto_4'], 'pagina' => $datos['pagina'], 'relacion_entrenadores_curso' => $datos['relacion_entrenadores_curso']);
                 $resultado = json_encode($jsoncursos_disponibles);
+                $gdatos = new guardardatos();
+                $gdatos->guardar_relacion_cliente_entrenador($datos['relacion_entrenadores_curso']);
                 //-------Crear archivo json-----------
                 $creador = fopen($directorio . "/json/cursos_disponibles/". $datos['titulo'] . ".json", "w+");
                 fwrite($creador, $resultado);
@@ -75,17 +77,30 @@ class guardardatos
         $id_usuario = $_COOKIE['id_usuario'];
         $obtener_codigo_cliente  = mysqli_query($conexion,"SELECT * FROM clientes WHERE relacion_usuario_cliente='$id_usuario'"); // obtener codigo del clinete con relacion usuario
         $codigo_cliente = mysqli_fetch_array($obtener_codigo_cliente); // almacenando la informacion de la consulta en un array
-        $id_cliente = $codigo_cliente['id_cliente'];
+        $id_cliente = $codigo_cliente['id_cliente']; 
         $insertar = mysqli_query($conexion,"INSERT INTO cursos_pagados(nombre_curso,costo_curso,id_relacion_cliente) VALUES('$nombrecurso','$costocurso','$id_cliente')");
+
         if($insertar){
-            print_r("insertar datos de compra listo");
+            print_r("insertar datos  listo");
         }else{
-            print_r("insertar datos de compra con problemas codigo cliente es");
+            print_r("insertar datos con problemas codigo cliente es");
+
             print_r(mysqli_error($conexion));
 
         }
         mysqli_close($conexion);
 
+
+    }
+    public function guardar_relacion_cliente_entrenador($id_entrenador){
+        include 'conexion.php';
+        $id_usuario = $_COOKIE['id_usuario'];
+        $obtener_codigo_cliente  = mysqli_query($conexion,"SELECT * FROM clientes WHERE relacion_usuario_cliente='$id_usuario'"); // obtener codigo del clinete con relacion usuario
+        $codigo_cliente = mysqli_fetch_array($obtener_codigo_cliente); // almacenando la informacion de la consulta en un array
+        $id_cliente = $codigo_cliente['id_cliente'];
+        $insertar_relacion_cliente_entrenador = mysqli_query($conexion,"INSERT INTO relacion_cliente_entrenador(id_cliente,id_entrenador) VALUES('$id_cliente','$id_entrenador')");
+        
+        
 
     }
 }

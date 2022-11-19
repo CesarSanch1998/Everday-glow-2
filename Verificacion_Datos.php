@@ -21,9 +21,9 @@ $id_usuario = $datos['id_usuario'];
 $obtener_codigo_cliente  = mysqli_query($conexion,"SELECT * FROM clientes WHERE relacion_usuario_cliente='$id_usuario'"); // obtener codigo del clinete con relacion usuario
 $codigo_cliente = mysqli_fetch_array($obtener_codigo_cliente); // almacenando la informacion de la consulta en un array
 
-//$obtener_codigo_entrenador = mysqli_query($conexion,"SELECT * FROM entrenadores WHERE relacion_usuario_entrenador='$id_usuario'"); // obtener codigo entrenador relacion usuario
+$obtener_codigo_entrenador = mysqli_query($conexion,"SELECT * FROM entrenadores WHERE relacion_usuario_entrenador='$id_usuario'"); // obtener codigo entrenador relacion usuario
 
-//$codigo_entrenador = mysqli_fetch_array($obtener_codigo_entrenador); //almacenando la informacion de la consulta en un array
+$codigo_entrenador = mysqli_fetch_array($obtener_codigo_entrenador); //almacenando la informacion de la consulta en un array
 
 
 if($datos['nivel'] == "cliente"){              // verifica el tipo de usuario cliente o entrenador
@@ -33,6 +33,8 @@ if($datos['nivel'] == "cliente"){              // verifica el tipo de usuario cl
     //$id_usuario = $datos['id_usuario'];
 
     $_SESSION['id_usuario'] = $id_usuario;
+
+    $_SESSION["ultimoAcceso"]= date("Y-n-j H:i:s");   // registro para llevar el tiempo de cuando inicio seccion 
     
     setcookie("id_cliente",$codigo_cliente['id_cliente']);
     
@@ -56,9 +58,11 @@ if($datos['nivel'] == "cliente"){              // verifica el tipo de usuario cl
 
     //$id_usuario = $datos['id_usuario'];
 
+    $_SESSION["ultimoAcceso"]= date("Y-n-j H:i:s");   // registro para llevar el tiempo de cuando inicio seccion 
+
     $_SESSION['id_usuario'] = $id_usuario; 
 
-    //setcookie("id_entrenador",$codigo_entrenador);
+    setcookie("id_entrenador",$codigo_entrenador['id_entrenador']);
 
     setcookie("nombre",$nombrecliente);        // almacenar en cookie el nombre del usuario que inicio seccion
     

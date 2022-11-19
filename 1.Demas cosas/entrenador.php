@@ -9,7 +9,7 @@ if (isset($_SESSION['nombre'])) {        // verifica si la variable nombre dentr
         // el no poder usar otra pagina que no sea la propia 
         header("Location: cliente.php");
     } else if ($_SESSION['nivel'] == "entrenador") {      // si el nivel que entra en esta pagina es entrenador lo redirige a su pagina
-        include('modalvermas.php');
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -148,44 +148,39 @@ if (isset($_SESSION['nombre'])) {        // verifica si la variable nombre dentr
                             </tr>
                         </thead>
                         <?php
-                                include 'conexion.php';
-                                $id_entrenador = $_COOKIE['id_entrenador'];
-                                $consulta_relacion_cliente_entrenador = mysqli_query($conexion, "SELECT * FROM relacion_cliente_entrenador WHERE id_entrenador='$id_entrenador'");
-                                if (mysqli_num_rows($consulta_relacion_cliente_entrenador) > 0) {
+                        include 'conexion.php';
+                        $id_entrenador= $_COOKIE['id_entrenador'];
+                        $consulta_relacion_cliente_entrenador = mysqli_query($conexion,"SELECT * FROM relacion_cliente_entrenador WHERE id_entrenador='$id_entrenador'");
+                        if(mysqli_num_rows($consulta_relacion_cliente_entrenador) > 0){      
+                            while($datos_relacion_cliente_entrenador = mysqli_fetch_array($consulta_relacion_cliente_entrenador)){
+                        $id_cliente = $datos_relacion_cliente_entrenador['id_cliente'];
 
-                                    while ($datos_relacion_cliente_entrenador = mysqli_fetch_array($consulta_relacion_cliente_entrenador)) {
-                                        $id_cliente = $datos_relacion_cliente_entrenador['id_cliente'];
+                        $consulta_relacion_cliente_usuario = mysqli_query($conexion,"SELECT * FROM clientes WHERE id_cliente='$id_cliente'");
+                        $datos_relacion_cliente_usuario = mysqli_fetch_array($consulta_relacion_cliente_usuario);
+                        
 
-                                        $consulta_relacion_cliente_usuario = mysqli_query($conexion, "SELECT * FROM clientes WHERE id_cliente='$id_cliente'");
-                                        $datos_relacion_cliente_usuario = mysqli_fetch_array($consulta_relacion_cliente_usuario);
+                        $id_usuario = $datos_relacion_cliente_usuario['relacion_usuario_cliente'];
+                        $consulta_datos_usuario = mysqli_query($conexion,"SELECT * FROM usuarios WHERE id_usuario='$id_usuario'");
+                        $datos_usuario = mysqli_fetch_array($consulta_datos_usuario);
 
-
-                                        $id_usuario = $datos_relacion_cliente_usuario['relacion_usuario_cliente'];
-                                        $consulta_datos_usuario = mysqli_query($conexion, "SELECT * FROM usuarios WHERE id_usuario='$id_usuario'");
-                                        $datos_usuario = mysqli_fetch_array($consulta_datos_usuario);
-
-                                        $consulta_relacion_cliente_datos = mysqli_query($conexion, "SELECT * FROM datos_opcionales_cliente WHERE id_relacion_clientes_datos='$id_cliente'");
-                                        $datos_relacion_cliente_datos = mysqli_fetch_array($consulta_relacion_cliente_datos);
-
-                                        // echo 'Id entrenador:'.$datos_relacion_cliente_entrenador['id_entrenador'].' id cliente: '.$datos_relacion_cliente_entrenador['id_cliente'].' Nombre cliente: '.$datos_relacion_cliente_usuario['nombre_cliente'].' '.$datos_relacion_cliente_usuario['apellido_cliente'].' correo: '.$datos_usuario['correo'];
-
-                                ?>
+                        $consulta_relacion_cliente_datos = mysqli_query($conexion,"SELECT * FROM datos_opcionales_cliente WHERE id_relacion_clientes_datos='$id_cliente'");
+                        $datos_relacion_cliente_datos = mysqli_fetch_array($consulta_relacion_cliente_datos);
+                        
+                               // echo 'Id entrenador:'.$datos_relacion_cliente_entrenador['id_entrenador'].' id cliente: '.$datos_relacion_cliente_entrenador['id_cliente'].' Nombre cliente: '.$datos_relacion_cliente_usuario['nombre_cliente'].' '.$datos_relacion_cliente_usuario['apellido_cliente'].' correo: '.$datos_usuario['correo'];
+                        
+                        ?>
                         <tbody>
                             <tr>
                                 <th scope="row"><img src="./images/avatar-tablas.png" alt=""></th>
-                                <td><?php echo $datos_relacion_cliente_usuario['nombre_cliente']; ?></td>
-                                <td><?php echo $datos_relacion_cliente_usuario['apellido_cliente']; ?></td>
-                                <td><?php echo $datos_usuario['correo']; ?></td>
-                                <td> <a class="tablas ml-4 btn btn-primary rounded btn-warning mt-1 btn-sm "
-                                        data-toggle="modal"
-                                        data-target="#editChildresn<?php echo $datos_relacion_cliente_datos['id_relacion_clientes_datos']; ?>">Ver
-                                        mas</a></td>
+                                <td><?php echo $datos_relacion_cliente_usuario['nombre_cliente'];?></td>
+                                <td><?php echo $datos_relacion_cliente_usuario['apellido_cliente'];?></td>
+                                <td><?php echo $datos_usuario['correo'];?></td>
+                                <td> <a href="#modal" id="vermasmodal"
+                                        class="tablas ml-4 btn btn-primary rounded btn-warning mt-1 btn-sm "
+                                        data-toggle="modal" data-target="#exampleModal">Ver mas</a></td>
                             </tr>
-                            <!--Ventana Modal ver mas--->
-                            <?php include('ModalVerMas.php'); ?>
                         </tbody>
-
-                        <?php
+                        <?php 
                                     }
                                 }
                                 ?>
@@ -194,7 +189,66 @@ if (isset($_SESSION['nombre'])) {        // verifica si la variable nombre dentr
                 </div>
             </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-title">
+                            <center>
+                                <h3>Otros Datos</h3>
+                                <!--Datos modal interno de la primera tabla -->
+                            </center>
+                        </div>
 
+                        <table class="table-fill">
+                            <thead>
+                                <tr>
+                                    <th class="text-left"></th>
+                                    <th class="text-left"></th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-hover">
+                                <tr>
+                                    <td class="text-left">Peso(kg)</td>
+                                    <td id="peso" class="text-left">
+                                        <?php echo $datos_relacion_cliente_datos['peso_cliente']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Altura</td>
+                                    <td id="altura" class="text-left">
+                                        <?php echo $datos_relacion_cliente_datos['altura_cliente']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Edad</td>
+                                    <td id="edad" class="text-left">
+                                        <?php echo $datos_relacion_cliente_datos['edad_cliente']; ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Patologia</td>
+                                    <td id="patologia" class="text-left">
+                                        <?php echo $datos_relacion_cliente_datos['patologia_cliente']; ?></td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <br><br><br>
 
@@ -215,40 +269,39 @@ if (isset($_SESSION['nombre'])) {        // verifica si la variable nombre dentr
                 </thead>
                 <tbody>
                     <?php
-                            include 'conexion.php';
-                            $id_entrenador = $_COOKIE['id_entrenador'];
-                            $consulta_relacion_cliente_entrenador = mysqli_query($conexion, "SELECT * FROM relacion_cliente_entrenador WHERE id_entrenador='$id_entrenador'");
-                            if (mysqli_num_rows($consulta_relacion_cliente_entrenador) > 0) {
-                                while ($datos_relacion_cliente_entrenador = mysqli_fetch_array($consulta_relacion_cliente_entrenador)) {
-                                    $id_cliente = $datos_relacion_cliente_entrenador['id_cliente'];
+                        include 'conexion.php';
+                        $id_entrenador= $_COOKIE['id_entrenador'];
+                        $consulta_relacion_cliente_entrenador = mysqli_query($conexion,"SELECT * FROM relacion_cliente_entrenador WHERE id_entrenador='$id_entrenador'");
+                        if(mysqli_num_rows($consulta_relacion_cliente_entrenador) > 0){      
+                            while($datos_relacion_cliente_entrenador = mysqli_fetch_array($consulta_relacion_cliente_entrenador)){
+                        $id_cliente = $datos_relacion_cliente_entrenador['id_cliente'];
 
-                                    $consulta_relacion_cliente_usuario = mysqli_query($conexion, "SELECT * FROM clientes WHERE id_cliente='$id_cliente'");
-                                    $datos_relacion_cliente_usuario = mysqli_fetch_array($consulta_relacion_cliente_usuario);
+                        $consulta_relacion_cliente_usuario = mysqli_query($conexion,"SELECT * FROM clientes WHERE id_cliente='$id_cliente'");
+                        $datos_relacion_cliente_usuario = mysqli_fetch_array($consulta_relacion_cliente_usuario);
+                        
 
+                        $id_usuario = $datos_relacion_cliente_usuario['relacion_usuario_cliente'];
+                        $consulta_datos_usuario = mysqli_query($conexion,"SELECT * FROM usuarios WHERE id_usuario='$id_usuario'");
+                        $datos_usuario = mysqli_fetch_array($consulta_datos_usuario);
 
-                                    $id_usuario = $datos_relacion_cliente_usuario['relacion_usuario_cliente'];
-                                    $consulta_datos_usuario = mysqli_query($conexion, "SELECT * FROM usuarios WHERE id_usuario='$id_usuario'");
-                                    $datos_usuario = mysqli_fetch_array($consulta_datos_usuario);
-
-                                    $consulta_relacion_cliente_datos = mysqli_query($conexion, "SELECT * FROM datos_opcionales_cliente WHERE id_relacion_clientes_datos='$id_cliente'");
-                                    $datos_relacion_cliente_datos = mysqli_fetch_array($consulta_relacion_cliente_datos);
-
-                                    // echo 'Id entrenador:'.$datos_relacion_cliente_entrenador['id_entrenador'].' id cliente: '.$datos_relacion_cliente_entrenador['id_cliente'].' Nombre cliente: '.$datos_relacion_cliente_usuario['nombre_cliente'].' '.$datos_relacion_cliente_usuario['apellido_cliente'].' correo: '.$datos_usuario['correo'];
-
-                            ?>
+                        $consulta_relacion_cliente_datos = mysqli_query($conexion,"SELECT * FROM datos_opcionales_cliente WHERE id_relacion_clientes_datos='$id_cliente'");
+                        $datos_relacion_cliente_datos = mysqli_fetch_array($consulta_relacion_cliente_datos);
+                        
+                               // echo 'Id entrenador:'.$datos_relacion_cliente_entrenador['id_entrenador'].' id cliente: '.$datos_relacion_cliente_entrenador['id_cliente'].' Nombre cliente: '.$datos_relacion_cliente_usuario['nombre_cliente'].' '.$datos_relacion_cliente_usuario['apellido_cliente'].' correo: '.$datos_usuario['correo'];
+                        
+                        ?>
                     <tr>
                         <th scope="row"><img src="./images/avatar-tablas.png" alt=""></th>
-                        <td><?php echo $datos_relacion_cliente_usuario['nombre_cliente']; ?></td>
-                        <td><?php echo $datos_relacion_cliente_usuario['apellido_cliente']; ?></td>
-                        <td><?php echo $datos_usuario['correo']; ?></td>
+                        <td><?php echo $datos_relacion_cliente_usuario['nombre_cliente'];?></td>
+                        <td><?php echo $datos_relacion_cliente_usuario['apellido_cliente'];?></td>
+                        <td><?php echo $datos_usuario['correo'];?></td>
                         <td> <a href="#modal" class="tablas ml-4 btn btn-primary rounded btn-warning mt-1 btn-sm "
-                                data-toggle="modal" data-target="#modalasignaractividad<?php echo $datos_relacion_cliente_datos['id_relacion_clientes_datos']; ?>">Asignar Actividad</a></td>
+                                data-toggle="modal" data-target="#exampleModal3">Asignar Actividad</a></td>
                     </tr>
-                    <?php  include('ModalAsignarActividad.php'); ?>
                 </tbody>
-                <?php
-                                }
+                <?php 
                             }
+                        }
                 ?>
             </table>
 
@@ -257,6 +310,49 @@ if (isset($_SESSION['nombre'])) {        // verifica si la variable nombre dentr
     </div>
 
 
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="container-list">
+                        <div class="perfil">
+                            <div id="fecha"></div>
+                            <h1>Hola $name</h1>
+                            <center> <span>Vamos a cumplir tus metas</span></center>
+                        </div>
+
+                        <div class="agregar-tarea">
+                            <input type="text" id="input" placeholder="agregar una tarea">
+                            <i id="boton-enter" class="fas fa-plus-circle"></i>
+                        </div>
+
+
+                        <div class="seccion-tarea">
+                            <h3>Estas son tus Actividades a Realizar </h3>
+                            <ul id="lista">
+
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     </div>
 
@@ -279,36 +375,36 @@ if (isset($_SESSION['nombre'])) {        // verifica si la variable nombre dentr
             <tbody>
                 <?php
                         include 'conexion.php';
-                        $id_entrenador = $_COOKIE['id_entrenador'];
-                        $consulta_relacion_cliente_entrenador = mysqli_query($conexion, "SELECT * FROM relacion_cliente_entrenador WHERE id_entrenador='$id_entrenador'");
-                        if (mysqli_num_rows($consulta_relacion_cliente_entrenador) > 0) {
-                            while ($datos_relacion_cliente_entrenador = mysqli_fetch_array($consulta_relacion_cliente_entrenador)) {
-                                $id_cliente = $datos_relacion_cliente_entrenador['id_cliente'];
+                        $id_entrenador= $_COOKIE['id_entrenador'];
+                        $consulta_relacion_cliente_entrenador = mysqli_query($conexion,"SELECT * FROM relacion_cliente_entrenador WHERE id_entrenador='$id_entrenador'");
+                        if(mysqli_num_rows($consulta_relacion_cliente_entrenador) > 0){      
+                            while($datos_relacion_cliente_entrenador = mysqli_fetch_array($consulta_relacion_cliente_entrenador)){
+                        $id_cliente = $datos_relacion_cliente_entrenador['id_cliente'];
 
-                                $consulta_relacion_cliente_usuario = mysqli_query($conexion, "SELECT * FROM clientes WHERE id_cliente='$id_cliente'");
-                                $datos_relacion_cliente_usuario = mysqli_fetch_array($consulta_relacion_cliente_usuario);
+                        $consulta_relacion_cliente_usuario = mysqli_query($conexion,"SELECT * FROM clientes WHERE id_cliente='$id_cliente'");
+                        $datos_relacion_cliente_usuario = mysqli_fetch_array($consulta_relacion_cliente_usuario);
+                        
 
+                        $id_usuario = $datos_relacion_cliente_usuario['relacion_usuario_cliente'];
+                        $consulta_datos_usuario = mysqli_query($conexion,"SELECT * FROM usuarios WHERE id_usuario='$id_usuario'");
+                        $datos_usuario = mysqli_fetch_array($consulta_datos_usuario);
 
-                                $id_usuario = $datos_relacion_cliente_usuario['relacion_usuario_cliente'];
-                                $consulta_datos_usuario = mysqli_query($conexion, "SELECT * FROM usuarios WHERE id_usuario='$id_usuario'");
-                                $datos_usuario = mysqli_fetch_array($consulta_datos_usuario);
-
-                                $consulta_relacion_cliente_datos = mysqli_query($conexion, "SELECT * FROM datos_opcionales_cliente WHERE id_relacion_clientes_datos='$id_cliente'");
-                                $datos_relacion_cliente_datos = mysqli_fetch_array($consulta_relacion_cliente_datos);
-
-                                // echo 'Id entrenador:'.$datos_relacion_cliente_entrenador['id_entrenador'].' id cliente: '.$datos_relacion_cliente_entrenador['id_cliente'].' Nombre cliente: '.$datos_relacion_cliente_usuario['nombre_cliente'].' '.$datos_relacion_cliente_usuario['apellido_cliente'].' correo: '.$datos_usuario['correo'];
-
+                        $consulta_relacion_cliente_datos = mysqli_query($conexion,"SELECT * FROM datos_opcionales_cliente WHERE id_relacion_clientes_datos='$id_cliente'");
+                        $datos_relacion_cliente_datos = mysqli_fetch_array($consulta_relacion_cliente_datos);
+                        
+                               // echo 'Id entrenador:'.$datos_relacion_cliente_entrenador['id_entrenador'].' id cliente: '.$datos_relacion_cliente_entrenador['id_cliente'].' Nombre cliente: '.$datos_relacion_cliente_usuario['nombre_cliente'].' '.$datos_relacion_cliente_usuario['apellido_cliente'].' correo: '.$datos_usuario['correo'];
+                        
                         ?>
                 <tr>
                     <th scope="row"><img src="./images/avatar-tablas.png" alt=""></th>
-                    <td><?php echo $datos_relacion_cliente_usuario['nombre_cliente']; ?></td>
-                    <td><?php echo $datos_relacion_cliente_usuario['apellido_cliente']; ?></td>
-                    <td><?php echo $datos_usuario['correo']; ?></td>
+                    <td><?php echo $datos_relacion_cliente_usuario['nombre_cliente'];?></td>
+                    <td><?php echo $datos_relacion_cliente_usuario['apellido_cliente'];?></td>
+                    <td><?php echo $datos_usuario['correo'];?></td>
                     <td> <a href="#modal" class="tablas ml-4 btn btn-primary rounded btn-warning mt-1 btn-sm "
                             data-toggle="modal" data-target="#exampleModal2">Ver mas</a></td>
                 </tr>
             </tbody>
-            <?php
+            <?php 
                             }
                         }
             ?>
