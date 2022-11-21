@@ -1,3 +1,17 @@
+
+ <?php               
+
+    include 'conexion.php';
+    //----------consulta en la tabla usuario para obtener la relacion cliente/usuario
+    $id_usuario = $_COOKIE['id_usuario'];
+    $obtener_codigo_cliente  = mysqli_query($conexion, "SELECT * FROM clientes WHERE relacion_usuario_cliente='$id_usuario'"); // obtener codigo del clinete con relacion usuario
+    $codigo_cliente = mysqli_fetch_array($obtener_codigo_cliente); // almacenando la informacion de la consulta en un array
+    $id_cliente = $codigo_cliente['id_cliente']; // almacena en la variable $id_cliente los datos de la db de la columna id cliente
+    $consulta = mysqli_query($conexion, "SELECT * FROM datos_opcionales_Cliente WHERE id_Relacion_clientes_datos='$id_cliente'");
+    
+   
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -168,6 +182,11 @@
                         </div>
                     </div>
                 </div>
+                
+                <?php 
+                 if(mysqli_num_rows($consulta) > 0){
+                
+                ?>
                 <div class="row text-center">
                     <h3>!!!Suscribase ahora a esta excelente clase con nuestros 2 mejores instructores¡¡¡ </h3>
                 </div>
@@ -178,7 +197,11 @@
                             </div>
                         </div>
                         <!--Paypal boton-->
-
+                    <?php 
+                    }else{
+                        echo '<h3 style="color:red">Necesitar registrar tus datos en la pagina principal, en barra caracteristicas para acceder a comprar su curso </h3>';
+                    }
+                    ?>
             </div>
         </div>
     </div>

@@ -22,15 +22,15 @@
 
           <div class="form-group">
             <label for="recipient-name" class="col-form-label text-left">Peso:</label>
-            <label for="recipient-name" class="col-form-label"><?php echo $datos_relacion_cliente_datos['peso_cliente']; ?></label>
+            <label for="recipient-name" class="col-form-label"><?php echo $datos_relacion_cliente_datos['peso_cliente']; ?> Kg</label>
           </div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Altura:</label>
-            <label for="recipient-name" class="col-form-label"><?php echo $datos_relacion_cliente_datos['altura_cliente']; ?></label>
+            <label for="recipient-name" class="col-form-label"><?php echo $datos_relacion_cliente_datos['altura_cliente']; ?> M</label>
           </div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Edad:</label>
-            <label for="recipient-name" class="col-form-label"><?php echo $datos_relacion_cliente_datos['edad_cliente']; ?></label>
+            <label for="recipient-name" class="col-form-label"><?php echo $datos_relacion_cliente_datos['edad_cliente']; ?> Años</label>
           </div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Patologia:</label>

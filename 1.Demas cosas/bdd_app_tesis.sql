@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-11-2022 a las 20:46:29
+-- Tiempo de generación: 19-11-2022 a las 01:44:50
 -- Versión del servidor: 10.4.24-MariaDB
 -- Versión de PHP: 7.4.29
 
@@ -69,7 +69,8 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`id_cliente`, `nombre_cliente`, `apellido_cliente`, `fecha_nacimiento_cliente`, `relacion_usuario_cliente`) VALUES
-(5, 'Joselin', 'Gonzalez', '0000-00-00', 20);
+(5, 'Joselin', 'Gonzalez', '0000-00-00', 20),
+(6, 'prueba', 'prueba', '0000-00-00', 22);
 
 -- --------------------------------------------------------
 
@@ -84,18 +85,19 @@ CREATE TABLE `cursos_disponibles` (
   `texto_2` varchar(50) NOT NULL,
   `texto_3` varchar(50) NOT NULL,
   `texto_4` varchar(300) NOT NULL,
-  `pagina` varchar(50) NOT NULL
+  `pagina` varchar(50) NOT NULL,
+  `relacion_entrenadores_curso` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `cursos_disponibles`
 --
 
-INSERT INTO `cursos_disponibles` (`id_curso`, `titulo`, `imagen`, `texto_2`, `texto_3`, `texto_4`, `pagina`) VALUES
-(1, 'FitCombat', 'blog-2.jpg', '¿Para que sirve el FitCombat?', 'Beneficios', 'Fortalece el músculo más importante del corazón. Eleva la autoestima y sube el buen ánimo y te llena de energía. Quema aproximadamente 600 calorías en 45 minutos. Mejora tu oxigenación.', 'videos/FitCombat/index-videos.php'),
-(2, 'Yoga', 'blog-3.jpg', '¿Para que sirve?', 'Ventajas', 'práctica que conecta el cuerpo, la respiración y la mente. Esta práctica utiliza posturas físicas, ejercicios de respiración y meditación para mejorar la salud general. El yoga se desarrolló como una práctica espiritual hace miles de años.', 'videos/Yoga/index-videos.php'),
-(3, 'Zumba', 'zumba-trainer.jpg', 'En que me Beneficia?', 'Dance', 'En una clase de una hora de zumba, una persona puede eliminar hasta 800 calorías. La razón es que esta impacta todos los aspectos del acondicionamiento físico,', 'videos/Zumba/index-videos.php'),
-(4, 'CrossFit', 'blog-5.jpg', 'Porque es importante?', 'Cardio', 'CrossFit se define como un sistema de entrenamiento de fuerza y acondicionamiento basado en ejercicios funcionales constantemente variados.', 'videos/CrossFit/index-videos.php');
+INSERT INTO `cursos_disponibles` (`id_curso`, `titulo`, `imagen`, `texto_2`, `texto_3`, `texto_4`, `pagina`, `relacion_entrenadores_curso`) VALUES
+(1, 'FitCombat', 'blog-2.jpg', '¿Para que sirve el FitCombat?', 'Beneficios', 'Fortalece el músculo más importante del corazón. Eleva la autoestima y sube el buen ánimo y te llena de energía. Quema aproximadamente 600 calorías en 45 minutos. Mejora tu oxigenación.', 'videos/FitCombat/index-videos.php', 0),
+(2, 'Yoga', 'blog-3.jpg', '¿Para que sirve?', 'Ventajas', 'práctica que conecta el cuerpo, la respiración y la mente. Esta práctica utiliza posturas físicas, ejercicios de respiración y meditación para mejorar la salud general. El yoga se desarrolló como una práctica espiritual hace miles de años.', 'videos/Yoga/index-videos.php', 0),
+(3, 'Zumba', 'zumba-trainer.jpg', 'En que me Beneficia?', 'Dance', 'En una clase de una hora de zumba, una persona puede eliminar hasta 800 calorías. La razón es que esta impacta todos los aspectos del acondicionamiento físico,', 'videos/Zumba/index-videos.php', 0),
+(4, 'CrossFit', 'blog-5.jpg', 'Porque es importante?', 'Cardio', 'CrossFit se define como un sistema de entrenamiento de fuerza y acondicionamiento basado en ejercicios funcionales constantemente variados.', 'videos/CrossFit/index-videos.php', 6);
 
 -- --------------------------------------------------------
 
@@ -115,8 +117,8 @@ CREATE TABLE `cursos_pagados` (
 --
 
 INSERT INTO `cursos_pagados` (`id_pago`, `nombre_curso`, `costo_curso`, `id_relacion_cliente`) VALUES
-(59, 'Zumba', 30, 5),
-(60, 'FitCombat', 60, 5);
+(66, 'Crossfit', 45, 6),
+(67, 'Crossfit', 45, 5);
 
 -- --------------------------------------------------------
 
@@ -137,6 +139,14 @@ CREATE TABLE `datos_opcionales_cliente` (
   `recidencia_cliente` varchar(200) NOT NULL,
   `id_relacion_clientes_datos` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `datos_opcionales_cliente`
+--
+
+INSERT INTO `datos_opcionales_cliente` (`id`, `edad_cliente`, `altura_cliente`, `peso_cliente`, `medida_pierna_cliente`, `medida_brazo_cliente`, `medida_cintura_cliente`, `patologia_cliente`, `link_foto_perfil_cliente`, `recidencia_cliente`, `id_relacion_clientes_datos`) VALUES
+(2, 25, 1.65, 56, 35.5, 20.2, 73, 'Ninguna', '', '', 6),
+(3, 20, 1.5, 45, 32.5, 22.2, 71, 'Ninguna', '', '', 5);
 
 -- --------------------------------------------------------
 
@@ -159,7 +169,8 @@ CREATE TABLE `entrenadores` (
 --
 
 INSERT INTO `entrenadores` (`id_entrenador`, `nombre_entrenador`, `apellido_entrenador`, `fecha_nacimiento_entrenador`, `residencia_entrenador`, `link_foto_perfil`, `relacion_usuario_entrenador`) VALUES
-(6, 'carlos', 'Sanchez', '2000-10-20', '', NULL, 21);
+(6, 'Ferry', 'Andrade', '1995-10-02', '', NULL, 21),
+(7, 'Juan De Nadie', 'Ramirez', '1995-01-25', '', NULL, 19);
 
 -- --------------------------------------------------------
 
@@ -215,6 +226,14 @@ CREATE TABLE `relacion_cliente_entrenador` (
   `id_entrenador` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Volcado de datos para la tabla `relacion_cliente_entrenador`
+--
+
+INSERT INTO `relacion_cliente_entrenador` (`id`, `id_cliente`, `id_entrenador`) VALUES
+(14, 6, 6),
+(18, 5, 6);
+
 -- --------------------------------------------------------
 
 --
@@ -237,7 +256,8 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `correo`, `contrasena`, `nivel`) VALUES
 (19, 'Juan De Nadie', 'Ramirez', 'juandenadie@gmail.com', '123456789', 'entrenador'),
 (20, 'Joselin', 'Gonzalez', 'joselingonzaalez@gmail.com', '238548413', 'cliente'),
-(21, 'carlos', 'Sanchez', 'cs96548@gmail.com', '12345678', 'entrenador');
+(21, 'Ferry', 'Andrade', 'ferryandrade@gmail.com', '12345678', 'entrenador'),
+(22, 'prueba', 'prueba', 'prueba@gmail.com', '12345678', 'cliente');
 
 --
 -- Índices para tablas volcadas
@@ -269,7 +289,8 @@ ALTER TABLE `clientes`
 -- Indices de la tabla `cursos_disponibles`
 --
 ALTER TABLE `cursos_disponibles`
-  ADD PRIMARY KEY (`id_curso`);
+  ADD PRIMARY KEY (`id_curso`),
+  ADD KEY `relacion_entrenadores_curso` (`relacion_entrenadores_curso`);
 
 --
 -- Indices de la tabla `cursos_pagados`
@@ -348,7 +369,7 @@ ALTER TABLE `actividadesclientes`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id_cliente` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_cliente` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos_disponibles`
@@ -360,19 +381,19 @@ ALTER TABLE `cursos_disponibles`
 -- AUTO_INCREMENT de la tabla `cursos_pagados`
 --
 ALTER TABLE `cursos_pagados`
-  MODIFY `id_pago` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id_pago` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT de la tabla `datos_opcionales_cliente`
 --
 ALTER TABLE `datos_opcionales_cliente`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `entrenadores`
 --
 ALTER TABLE `entrenadores`
-  MODIFY `id_entrenador` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_entrenador` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `estudios`
@@ -396,13 +417,13 @@ ALTER TABLE `relacion_actividad_cliente`
 -- AUTO_INCREMENT de la tabla `relacion_cliente_entrenador`
 --
 ALTER TABLE `relacion_cliente_entrenador`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id_usuario` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Restricciones para tablas volcadas

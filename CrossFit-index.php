@@ -1,5 +1,13 @@
-<?php 
-?>
+<?php
+                        include 'conexion.php';
+                        $id_cliente = $_COOKIE['id_cliente'];
+                        $consultar_registro = mysqli_query($conexion,"SELECT * FROM cursos_pagados WHERE id_relacion_cliente='$id_cliente'");
+                        $titulo_curso = mysqli_fetch_array($consultar_registro);
+                        //if(mysqli_num_rows($consultar_registro) > 0){   
+                        if(isset($titulo_curso['nombre_curso'])){
+                        if($titulo_curso['nombre_curso']=="Crossfit"){ //verifica si el cliente tiene un curso comprado con ese nombre 
+
+                        ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -149,16 +157,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <?php
-                        include 'conexion.php';
-                        $id_cliente = $_COOKIE['id_cliente'];
-                        $consultar_registro = mysqli_query($conexion,"SELECT * FROM cursos_pagados WHERE id_relacion_cliente='$id_cliente'");
-                        $titulo_curso = mysqli_fetch_array($consultar_registro);
-                        //if(mysqli_num_rows($consultar_registro) > 0){   
-                        if(isset($titulo_curso['nombre_curso'])){
-                        if($titulo_curso['nombre_curso']=="Crossfit"){ //verifica si el cliente tiene un curso comprado con ese nombre 
-
-                        ?>
+                     
                         <h3>Ya estas registrado en este curso puedes revisar la seccion de mis cursos!</h3>
                         <?php
                         
